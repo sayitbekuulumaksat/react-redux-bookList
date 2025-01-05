@@ -1,47 +1,58 @@
-import { useState } from 'react';
-import './BookForm.css';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import {addBook} from "../../redux/slices/booksSlice";
+import createBookWithID from "../../utils/createBookEithID";
+import booksData from "../../data/books.json";
+import "./BookForm.css";
 
-const BookForm = () => {
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
+function BookForm() {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const dispatch = useDispatch();
 
-        if (title && author) {
-            // dispatch action
-
-            setTitle('');
-            setAuthor('');
-        }
-    };
-
-    return (
-        <div className="app-block book-form">
-            <h2>Add a New Book</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="title">Title: </label>
-                    <input
-                        type="text"
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="author">Author: </label>
-                    <input
-                        type="text"
-                        id="author"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Add Book</button>
-            </form>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (title && author) {
+      dispatch(addBook(createBookWithID({ title, author })));
+      setTitle("");
+      setAuthor("");
+    }
+  };
+  const handleRandomBook = () => {
+    const randomIndex = Math.floor(Math.random() * booksData.length);
+    const randomBook = booksData[randomIndex];
+    dispatch(addBook(createBookWithID(randomBook)));
+  };
+  return (
+    <div className='app-block book-form'>
+      <h2>Add a New Book</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor='title'>Title: </label>
+          <input
+            type='text'
+            id='title'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
-    );
-};
+        <div>
+          <label htmlFor='author'>Author: </label>
+          <input
+            type='text'
+            id='author'
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+        <button type='submit'>Add Book</button>
+        <button type='text' onClick={handleRandomBook}>
+          Random Book
+        </button>
+      </form>
+    </div>
+  );
+}
 
 export default BookForm;
