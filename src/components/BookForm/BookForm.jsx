@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addBook, fetchBook } from "../../redux/slices/booksSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addBook, fetchBook, selectIsLoadingViaAPI } from "../../redux/slices/booksSlice";
 import { setError } from "../../redux/slices/errorSlice";
+import { FaSpinner } from "react-icons/fa";
 import createBookWithID from "../../utils/createBookEithID";
 import booksData from "../../data/books.json";
 import "./BookForm.css";
@@ -9,27 +10,29 @@ import "./BookForm.css";
 function BookForm() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const isLoadingViaAPI = useSelector(selectIsLoadingViaAPI)
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (title && author) {
-      dispatch(addBook(createBookWithID({ title, author }, "manual")));
-      setTitle("");
-      setAuthor("");
-    } else {
-      dispatch(setError("No title and author"));
-    }
-  };
   const handleRandomBook = () => {
     const randomIndex = Math.floor(Math.random() * booksData.length);
     const randomBook = booksData[randomIndex];
     dispatch(addBook(createBookWithID(randomBook, "ramdom")));
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const handleAddRandomBookViaAPI = () => {
-    dispatch(fetchBook("http://localhost:4000/random-book"));
+    if (title && author) {
+      dispatch(addBook(createBookWithID({ title, author }, "manual")));
+      setTitle("");
+      setAuthor("");
+    } else {
+      dispatch(setError("You must fill title and author!"));
+    }
+  };
+
+  const handleAddRandomBookViaAPI =  () => {
+    dispatch(fetchBook("http://localhost:4000/random-book-delayed"));
   };
   return (
     <div className='app-block book-form'>
@@ -57,8 +60,19 @@ function BookForm() {
         <button type='text' onClick={handleRandomBook}>
           Random Book
         </button>
-        <button type='text' onClick={handleAddRandomBookViaAPI}>
-          Add Random Book Via API
+        <button
+          type='text'
+          onClick={handleAddRandomBookViaAPI}
+          disabled={isLoadingViaAPI}
+        >
+          {isLoadingViaAPI ? (
+            <>
+              <span>Loading Book...</span>
+              <FaSpinner className='spinner' />
+            </>
+          ) : (
+            " Add Random Book Via API"
+          )}
         </button>
       </form>
     </div>
