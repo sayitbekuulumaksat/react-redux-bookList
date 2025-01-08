@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-redux-bookList/static/css/main.67b389a3.css",
+    "main.js": "/react-redux-bookList/static/js/main.d32ea0a7.js",
+    "index.html": "/react-redux-bookList/index.html",
+    "main.67b389a3.css.map": "/react-redux-bookList/static/css/main.67b389a3.css.map",
+    "main.d32ea0a7.js.map": "/react-redux-bookList/static/js/main.d32ea0a7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.67b389a3.css",
+    "static/js/main.d32ea0a7.js"
+  ]
+}
